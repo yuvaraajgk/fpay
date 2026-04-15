@@ -1,0 +1,10 @@
+node_modules/
+.env
+.DS_Store
+*.log
+RAZORPAY_SETUP.md
+WEBHOOK_SETUP.md
+SETUP_GUIDE.md
+TEST_DATA_GUIDE.md
+TEST_AUTH.md
+TEST_CLIENTS.md
