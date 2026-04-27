@@ -147,7 +147,3 @@ npm run dev
 - Configure S3 correctly for PDF generation/storage.
 - Set a strong `JWT_SECRET` in production.
 - Keep sensitive credentials out of source control.
-
-## License
-
-MIT
