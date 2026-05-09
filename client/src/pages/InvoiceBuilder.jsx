@@ -40,7 +40,6 @@ const InvoiceBuilder = () => {
     total: 0
   });
 
-  // Load clients and invoice data on mount
   useEffect(() => {
     loadClients();
     if (invoiceId) {
@@ -66,7 +65,6 @@ const InvoiceBuilder = () => {
     }
   };
 
-  // Calculate totals whenever form data changes
   useEffect(() => {
     calculateTotals();
   }, [formData.lineItems, formData.tax, formData.discount]);
@@ -86,23 +84,18 @@ const InvoiceBuilder = () => {
 
 
   const calculateTotals = () => {
-    // Calculate subtotal: sum of (quantity * unitPrice) for all line items
     const subtotal = formData.lineItems.reduce((sum, item) => {
       const quantity = parseFloat(item.quantity) || 0;
       const unitPrice = parseFloat(item.unitPrice) || 0;
       return sum + (quantity * unitPrice);
     }, 0);
 
-    // Calculate tax amount
     const taxAmount = (subtotal * (formData.tax || 0)) / 100;
 
-    // Calculate subtotal with tax
     const subtotalWithTax = subtotal + taxAmount;
 
-    // Calculate discount amount
     const discountAmount = (subtotalWithTax * (formData.discount || 0)) / 100;
 
-    // Calculate total: (subtotal * (1 + tax/100)) * (1 - discount/100)
     const total = subtotalWithTax - discountAmount;
 
     setCalculations({
@@ -217,7 +210,6 @@ const InvoiceBuilder = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             {invoiceId ? 'Edit Invoice' : 'Create New Invoice'}
@@ -225,7 +217,6 @@ const InvoiceBuilder = () => {
           <p className="mt-2 text-gray-600">Build and send invoices to your clients</p>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-800 text-sm">{error}</p>
@@ -233,7 +224,6 @@ const InvoiceBuilder = () => {
         )}
 
         <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
-          {/* Client Selection */}
           <div>
             <label htmlFor="clientId" className="block text-sm font-medium text-gray-700 mb-2">
               Client <span className="text-red-500">*</span>
@@ -258,7 +248,6 @@ const InvoiceBuilder = () => {
             )}
           </div>
 
-          {/* Line Items */}
           <div>
             <div className="flex justify-between items-center mb-4">
               <label className="block text-sm font-medium text-gray-700">
@@ -322,7 +311,6 @@ const InvoiceBuilder = () => {
             </div>
           </div>
 
-          {/* Tax, Discount, Due Date */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="tax" className="block text-sm font-medium text-gray-700 mb-2">
@@ -371,7 +359,6 @@ const InvoiceBuilder = () => {
             </div>
           </div>
 
-          {/* Calculations Display */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="space-y-2">
               <div className="flex justify-between">
@@ -397,7 +384,6 @@ const InvoiceBuilder = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex justify-end space-x-4 pt-4">
             <button
               type="button"

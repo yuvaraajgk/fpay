@@ -16,7 +16,6 @@ const PaymentPage = () => {
   const [error, setError] = useState(null);
   const [checkoutReady, setCheckoutReady] = useState(false);
   const [confirmingPayment, setConfirmingPayment] = useState(false);
-  /** Shown as a banner if redirect confirm fails but invoice still loads (e.g. network) */
   const [paymentConfirmError, setPaymentConfirmError] = useState(null);
 
   const loadInvoice = useCallback(async () => {
@@ -33,7 +32,6 @@ const PaymentPage = () => {
     }
   }, [invoiceId]);
 
-  /** Load invoice; if Razorpay redirected with razorpay_payment_id, verify server-side first (webhooks skip localhost). */
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -201,7 +199,6 @@ const PaymentPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Success Message (callback URL flag — status may still update via confirm step above) */}
         {success && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-green-800 font-medium">Payment successful! Thank you for your payment.</p>
@@ -218,7 +215,6 @@ const PaymentPage = () => {
           </div>
         )}
 
-        {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-between items-start">
             <div>
@@ -243,7 +239,6 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        {/* Invoice Details */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
@@ -266,7 +261,6 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          {/* Client Information */}
           <div className="border-t pt-6">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Bill To</h3>
             <div className="text-gray-900">
@@ -279,7 +273,6 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        {/* Line Items */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4">Line Items</h3>
           <div className="overflow-x-auto">
@@ -325,7 +318,6 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        {/* Totals */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-end">
             <div className="w-64 space-y-2">
@@ -360,7 +352,6 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        {/* Payment Section — customers pay the business via Razorpay; money does not go through this app as a fee */}
         {invoice.status !== 'paid' &&
           ['cancelled', 'expired'].includes(invoice.status) && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center text-amber-900">
@@ -443,7 +434,6 @@ const PaymentPage = () => {
           </div>
         )}
 
-        {/* Already Paid Message */}
         {invoice.status === 'paid' && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
             <div className="text-green-600 text-4xl mb-4">✓</div>

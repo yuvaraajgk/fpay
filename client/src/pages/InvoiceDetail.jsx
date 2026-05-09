@@ -140,7 +140,6 @@ const InvoiceDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-6">
           <button
             onClick={() => navigate('/invoices')}
@@ -164,9 +163,7 @@ const InvoiceDetail = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Invoice Info */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
@@ -202,7 +199,6 @@ const InvoiceDetail = () => {
                 </div>
               </div>
 
-              {/* Client Info */}
               <div className="border-t pt-6">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Bill To</h3>
                 <div className="text-gray-900">
@@ -215,7 +211,6 @@ const InvoiceDetail = () => {
               </div>
             </div>
 
-            {/* Line Items */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-semibold mb-4">Line Items</h3>
               <div className="overflow-x-auto">
@@ -259,7 +254,6 @@ const InvoiceDetail = () => {
               </div>
             </div>
 
-            {/* Totals */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex justify-end">
                 <div className="w-64 space-y-2">
@@ -297,7 +291,6 @@ const InvoiceDetail = () => {
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-semibold mb-4">Bill payment</h3>

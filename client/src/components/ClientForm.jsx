@@ -29,7 +29,6 @@ const ClientForm = ({ client, onSubmit, onCancel, isLoading, error }) => {
       ...prev,
       [name]: value
     }));
-    // Clear validation error for this field
     if (validationErrors[name]) {
       setValidationErrors(prev => {
         const newErrors = { ...prev };

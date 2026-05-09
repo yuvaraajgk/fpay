@@ -40,7 +40,6 @@ const DashboardStats = ({ stats, revenueData, yearlyRevenueData, recentInvoices,
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between">
@@ -107,9 +106,7 @@ const DashboardStats = ({ stats, revenueData, yearlyRevenueData, recentInvoices,
         </div>
       </div>
 
-      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Monthly Revenue Chart */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h3 className="text-lg font-semibold mb-4">Monthly Revenue</h3>
           {revenueData && revenueData.length > 0 ? (
@@ -136,7 +133,6 @@ const DashboardStats = ({ stats, revenueData, yearlyRevenueData, recentInvoices,
           )}
         </div>
 
-        {/* Yearly Revenue Line Chart */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h3 className="text-lg font-semibold mb-4">Yearly Revenue</h3>
           {yearlyRevenueData && yearlyRevenueData.length > 0 ? (
@@ -164,7 +160,6 @@ const DashboardStats = ({ stats, revenueData, yearlyRevenueData, recentInvoices,
         </div>
       </div>
 
-      {/* Recent Invoices Table */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h3 className="text-lg font-semibold mb-4">Recent Invoices</h3>
         {recentInvoices && recentInvoices.length > 0 ? (

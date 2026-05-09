@@ -92,7 +92,6 @@ const Invoices = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Dashboard Link */}
         <Link
           to="/"
           className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
@@ -100,7 +99,6 @@ const Invoices = () => {
           <span className="mr-2">←</span> Back to Dashboard
         </Link>
 
-        {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
@@ -116,7 +114,6 @@ const Invoices = () => {
           </div>
         </div>
 
-        {/* Status Filters */}
         <div className="mb-6">
           <div className="flex space-x-2">
             {['all', 'draft', 'sent', 'paid', 'overdue', 'declined', 'cancelled', 'expired'].map((status) => (
@@ -135,14 +132,12 @@ const Invoices = () => {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-800 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Invoices Table */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center items-center py-12">

@@ -1,4 +1,3 @@
-/** Invoice amounts match Razorpay Payment Links (INR). */
 export function formatInr(n) {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',

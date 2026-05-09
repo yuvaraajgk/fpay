@@ -20,12 +20,10 @@ const Clients = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState(null);
 
-  // Fetch clients on component mount
   useEffect(() => {
     fetchClients();
   }, []);
 
-  // Open edit form if navigated with editClientId in state (e.g. from ClientDetail)
   useEffect(() => {
     const editClientId = location.state?.editClientId;
     if (editClientId && clients.length > 0 && !editingClient) {
@@ -81,17 +79,13 @@ const Clients = () => {
       setFormError(null);
 
       if (editingClient) {
-        // Update existing client
         await updateClient(editingClient._id, formData);
       } else {
-        // Create new client
         await createClient(formData);
       }
 
-      // Refresh clients list
       await fetchClients();
-      
-      // Close form
+
       setShowForm(false);
       setEditingClient(null);
     } catch (err) {
@@ -112,7 +106,6 @@ const Clients = () => {
 
     try {
       await deleteClient(id);
-      // Refresh clients list
       await fetchClients();
     } catch (err) {
       console.error('Error deleting client:', err);
@@ -123,7 +116,6 @@ const Clients = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Dashboard Link */}
         <Link
           to="/"
           className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
@@ -131,7 +123,6 @@ const Clients = () => {
           <span className="mr-2">←</span> Back to Dashboard
         </Link>
 
-        {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
@@ -149,14 +140,12 @@ const Clients = () => {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-800 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Client Form */}
         {showForm && (
           <div className="mb-8">
             <ClientForm
@@ -169,7 +158,6 @@ const Clients = () => {
           </div>
         )}
 
-        {/* Clients List */}
         {!showForm && (
           <div className="bg-white rounded-lg shadow-sm p-6">
             <ClientList
