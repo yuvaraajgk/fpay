@@ -41,9 +41,6 @@ const Register = () => {
         <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">FreelancePay</h1>
         <div className="bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Create Account</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            One email = one business account. You cannot register again with an email that is already in use.
-          </p>
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
               {error}
