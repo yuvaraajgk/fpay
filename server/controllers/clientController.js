@@ -1,13 +1,11 @@
 import Client from '../models/Client.js';
 import Invoice from '../models/Invoice.js';
 
-// Create a new client
 export const createClient = async (req, res) => {
   try {
     const { name, email, phone, company, address } = req.body;
-    const freelancerId = req.userId; // From JWT middleware
+    const freelancerId = req.userId;
 
-    // Create new client associated with the logged-in freelancer
     const client = await Client.create({
       freelancerId,
       name,
@@ -23,28 +21,24 @@ export const createClient = async (req, res) => {
     });
   } catch (error) {
     console.error('Create client error:', error);
-    
-    // Handle duplicate email error (from unique index)
     if (error.code === 11000) {
-      return res.status(400).json({ 
-        message: 'A client with this email already exists' 
+      return res.status(400).json({
+        message: 'A client with this email already exists'
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Error creating client', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error creating client',
+      error: error.message
     });
   }
 };
 
-// Get all clients for the logged-in freelancer
 export const getClients = async (req, res) => {
   try {
-    const freelancerId = req.userId; // From JWT middleware
+    const freelancerId = req.userId;
 
     const clients = await Client.find({ freelancerId })
-      .sort({ createdAt: -1 }); // Most recent first
+      .sort({ createdAt: -1 });
 
     res.json({
       message: 'Clients retrieved successfully',
@@ -53,27 +47,26 @@ export const getClients = async (req, res) => {
     });
   } catch (error) {
     console.error('Get clients error:', error);
-    res.status(500).json({ 
-      message: 'Error retrieving clients', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error retrieving clients',
+      error: error.message
     });
   }
 };
 
-// Get a single client by ID (verify ownership)
 export const getClient = async (req, res) => {
   try {
     const { id } = req.params;
-    const freelancerId = req.userId; // From JWT middleware
+    const freelancerId = req.userId;
 
-    const client = await Client.findOne({ 
-      _id: id, 
-      freelancerId 
+    const client = await Client.findOne({
+      _id: id,
+      freelancerId
     });
 
     if (!client) {
-      return res.status(404).json({ 
-        message: 'Client not found or you do not have permission to access it' 
+      return res.status(404).json({
+        message: 'Client not found or you do not have permission to access it'
       });
     }
 
@@ -83,41 +76,35 @@ export const getClient = async (req, res) => {
     });
   } catch (error) {
     console.error('Get client error:', error);
-    
-    // Handle invalid ObjectId format
     if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid client ID format' 
+      return res.status(400).json({
+        message: 'Invalid client ID format'
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Error retrieving client', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error retrieving client',
+      error: error.message
     });
   }
 };
 
-// Update a client (verify ownership)
 export const updateClient = async (req, res) => {
   try {
     const { id } = req.params;
-    const freelancerId = req.userId; // From JWT middleware
+    const freelancerId = req.userId;
     const { name, email, phone, company, address } = req.body;
 
-    // Find client and verify ownership
-    const client = await Client.findOne({ 
-      _id: id, 
-      freelancerId 
+    const client = await Client.findOne({
+      _id: id,
+      freelancerId
     });
 
     if (!client) {
-      return res.status(404).json({ 
-        message: 'Client not found or you do not have permission to update it' 
+      return res.status(404).json({
+        message: 'Client not found or you do not have permission to update it'
       });
     }
 
-    // Update fields (only update provided fields)
     if (name !== undefined) client.name = name;
     if (email !== undefined) client.email = email;
     if (phone !== undefined) client.phone = phone;
@@ -132,33 +119,27 @@ export const updateClient = async (req, res) => {
     });
   } catch (error) {
     console.error('Update client error:', error);
-    
-    // Handle duplicate email error
     if (error.code === 11000) {
-      return res.status(400).json({ 
-        message: 'A client with this email already exists' 
+      return res.status(400).json({
+        message: 'A client with this email already exists'
       });
     }
-    
-    // Handle invalid ObjectId format
     if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid client ID format' 
+      return res.status(400).json({
+        message: 'Invalid client ID format'
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Error updating client', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error updating client',
+      error: error.message
     });
   }
 };
 
-// Delete a client (verify ownership)
 export const deleteClient = async (req, res) => {
   try {
     const { id } = req.params;
-    const freelancerId = req.userId; // From JWT middleware
+    const freelancerId = req.userId;
 
     const client = await Client.findOne({ _id: id, freelancerId });
 
@@ -187,17 +168,14 @@ export const deleteClient = async (req, res) => {
     });
   } catch (error) {
     console.error('Delete client error:', error);
-    
-    // Handle invalid ObjectId format
     if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid client ID format' 
+      return res.status(400).json({
+        message: 'Invalid client ID format'
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Error deleting client', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Error deleting client',
+      error: error.message
     });
   }
 };

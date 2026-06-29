@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 
 const normalizeEmail = (email) => (typeof email === 'string' ? email.trim().toLowerCase() : '');
 
-// Register a new user — one email = one account (name/business cannot duplicate under another signup)
 export const register = async (req, res) => {
   try {
     const { name, password, businessName, logoUrl } = req.body;
@@ -33,14 +32,12 @@ export const register = async (req, res) => {
       logoUrl: logoUrl || ''
     });
 
-    // Generate JWT token (expires in 7 days)
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Return user data (without password) and token
     res.status(201).json({
       message: 'User registered successfully',
       token,
@@ -64,7 +61,6 @@ export const register = async (req, res) => {
   }
 };
 
-// Login user
 export const login = async (req, res) => {
   try {
     const { password } = req.body;
@@ -75,20 +71,17 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Compare password with hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Generate JWT token (expires in 7 days)
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Return user data (without password) and token
     res.json({
       message: 'Login successful',
       token,

@@ -45,10 +45,6 @@ const formatInr = (amount) =>
     minimumFractionDigits: 2
   }).format(amount);
 
-/**
- * Send invoice email with Razorpay payment link and public invoice URL.
- * If SMTP is not configured, logs a warning and returns { sent: false, skipped: true }.
- */
 export const sendInvoiceEmail = async ({
   to,
   clientName,
@@ -95,11 +91,7 @@ export const sendInvoiceEmail = async ({
     return { sent: true };
   } catch (err) {
     console.error('[email] sendMail failed:', err.message || err);
-    return {
-      sent: false,
-      skipped: false,
-      error: err.message || 'SMTP send failed'
-    };
+    return { sent: false, skipped: false, error: err.message || 'SMTP send failed' };
   }
 };
 

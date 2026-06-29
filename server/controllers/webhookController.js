@@ -7,11 +7,6 @@ import {
 
 const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-/**
- * Handle Razorpay webhook events
- * @param {Object} req - Express request object (req.body must be raw for signature verification)
- * @param {Object} res - Express response object
- */
 export const handleRazorpayWebhook = async (req, res) => {
   const signature = req.headers['x-razorpay-signature'];
 
@@ -20,10 +15,9 @@ export const handleRazorpayWebhook = async (req, res) => {
     return res.status(400).send('Webhook Error: Missing signature');
   }
 
-  // Verify webhook signature using HMAC SHA256 (req.body is Buffer when using express.raw())
   const body = req.body;
   const bodyString = Buffer.isBuffer(body) ? body.toString('utf8') : (typeof body === 'string' ? body : JSON.stringify(body));
-  
+
   const expectedSignature = crypto
     .createHmac('sha256', webhookSecret)
     .update(bodyString)
@@ -44,23 +38,18 @@ export const handleRazorpayWebhook = async (req, res) => {
       case 'payment_link.paid':
         await handlePaymentLinkPaid(payload.payload.payment_link.entity);
         break;
-
       case 'payment_link.cancelled':
         await handlePaymentLinkCancelled(payload.payload.payment_link.entity);
         break;
-
       case 'payment_link.expired':
         await handlePaymentLinkExpired(payload.payload.payment_link.entity);
         break;
-
       case 'payment.captured':
         await handlePaymentCaptured(payload.payload.payment.entity);
         break;
-
       case 'payment.failed':
         await handlePaymentFailed(payload.payload.payment.entity);
         break;
-
       default:
         console.log(`Unhandled Razorpay event: ${event}`);
     }
@@ -72,10 +61,6 @@ export const handleRazorpayWebhook = async (req, res) => {
   }
 };
 
-/**
- * Handle payment_link.paid event
- * @param {Object} paymentLink - Payment link entity from webhook
- */
 const handlePaymentLinkPaid = async (paymentLink) => {
   try {
     const invoiceId = paymentLink.reference_id;
@@ -106,7 +91,7 @@ const handlePaymentLinkPaid = async (paymentLink) => {
       await invoice.save();
       console.log(`Invoice ${invoiceId} marked as paid`);
     } else if (!invoice.paidAt) {
-      // Already PAID (e.g. payment.captured arrived first) — still attach date / payment id
+      // Already paid (payment.captured arrived first) — backfill date/payment id
       if (paymentLink.payment_id) {
         invoice.razorpayPaymentId = invoice.razorpayPaymentId || paymentLink.payment_id;
       }
@@ -149,9 +134,6 @@ const handlePaymentLinkExpired = async (entity) => {
   }
 };
 
-/**
- * Customer payment attempt failed (card declined, etc.). Maps to invoice status declined.
- */
 const handlePaymentFailed = async (payment) => {
   try {
     const notes = payment.notes || {};
@@ -180,10 +162,6 @@ const handlePaymentFailed = async (payment) => {
   }
 };
 
-/**
- * Handle payment.captured event (fallback - payment links may trigger this)
- * @param {Object} payment - Payment entity from webhook
- */
 const handlePaymentCaptured = async (payment) => {
   try {
     const orderId = payment.order_id;
@@ -207,7 +185,7 @@ const handlePaymentCaptured = async (payment) => {
       }
     }
 
-    // Payment Link flows often omit order_id and notes on the payment entity — match by link id
+    // Payment link flows often omit order_id on the payment entity
     const plinkId = payment.payment_link_id;
     if (plinkId) {
       const byPlink = await Invoice.findOne({ razorpayPaymentLinkId: plinkId });
@@ -232,15 +210,10 @@ const handlePaymentCaptured = async (payment) => {
     const notes = payment.notes || {};
     const invoiceId = notes.invoiceId || notes.invoice_id;
 
-    if (!invoiceId) {
-      return;
-    }
+    if (!invoiceId) return;
 
     const invoice = await Invoice.findById(invoiceId);
-
-    if (!invoice) {
-      return;
-    }
+    if (!invoice) return;
 
     if (invoice.status !== 'paid') {
       invoice.status = 'paid';

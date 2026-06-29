@@ -6,9 +6,6 @@ import {
   paidAtFromPaymentEntity
 } from '../services/razorpay.js';
 
-/**
- * Build the JSON shape for the public payment page (shared by GET and POST confirm).
- */
 const buildPublicInvoicePayload = async (invoice) => {
   let pdfUrl = '';
   if (invoice.pdfS3Key || invoice.pdfUrl) {
@@ -52,10 +49,7 @@ const buildPublicInvoicePayload = async (invoice) => {
   };
 };
 
-/**
- * After Razorpay redirects back with ?razorpay_payment_id=..., verify with Razorpay API and mark paid.
- * Webhooks do not reach localhost; this path keeps dev and slow-webhook cases consistent.
- */
+// Webhooks don't reach localhost; this keeps dev and slow-webhook cases consistent
 export const confirmPaymentFromRedirect = async (req, res) => {
   try {
     const { invoiceId } = req.params;
@@ -137,31 +131,20 @@ export const confirmPaymentFromRedirect = async (req, res) => {
   }
 };
 
-/**
- * Get invoice details for public payment page
- * No authentication required - this is for clients to view and pay invoices
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 export const getInvoiceForPayment = async (req, res) => {
   try {
     const { invoiceId } = req.params;
 
-    // Find invoice and populate client details
     const invoice = await Invoice.findById(invoiceId)
       .populate('clientId', 'name email phone company address')
       .populate('freelancerId', 'name businessName logoUrl');
 
     if (!invoice) {
-      return res.status(404).json({
-        message: 'Invoice not found'
-      });
+      return res.status(404).json({ message: 'Invoice not found' });
     }
 
     if (invoice.status === 'draft') {
-      return res.status(403).json({
-        message: 'This invoice has not been sent yet'
-      });
+      return res.status(403).json({ message: 'This invoice has not been sent yet' });
     }
 
     const payload = await buildPublicInvoicePayload(invoice);
@@ -170,9 +153,7 @@ export const getInvoiceForPayment = async (req, res) => {
     console.error('Get invoice for payment error:', error);
 
     if (error.name === 'CastError') {
-      return res.status(400).json({
-        message: 'Invalid invoice ID format'
-      });
+      return res.status(400).json({ message: 'Invalid invoice ID format' });
     }
 
     res.status(500).json({

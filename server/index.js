@@ -9,13 +9,10 @@ import webhookRoutes from './routes/webhooks.js';
 import publicRoutes from './routes/public.js';
 import dashboardRoutes from './routes/dashboard.js';
 
-// Load environment variables
 dotenv.config();
 
-// Initialize Express app
 const app = express();
 
-// Middleware
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000',
   'http://localhost:3000',
@@ -33,27 +30,22 @@ app.use(cors({
   credentials: true
 }));
 
-// IMPORTANT: Webhook route must use raw body parser BEFORE express.json()
-// Razorpay webhooks require raw body for signature verification
+// Webhook route must use raw body BEFORE express.json() — Razorpay signature verification requires it
 app.use('/api/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
 
-// JSON body parser (after webhook route)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic route for health check
 app.get('/', (req, res) => {
   res.json({ message: 'FreelancePay API is running' });
 });
 
-// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({
@@ -62,12 +54,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Start server only after MongoDB is connected (avoids Mongoose buffering timeouts)
 const PORT = process.env.PORT || 5001;
 const start = async () => {
   try {
