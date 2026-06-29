@@ -24,7 +24,8 @@ const Register = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const res = await axios.post('/api/auth/register', formData);
+      const BASE = import.meta.env.VITE_API_URL || '';
+      const res = await axios.post(`${BASE}/api/auth/register`, formData);
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {

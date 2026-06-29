@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = '/api/invoices';
+const BASE = import.meta.env.VITE_API_URL || '';
+const API_URL = `${BASE}/api/invoices`;
 
 const getAuthToken = () => {
   return localStorage.getItem('token');

@@ -19,7 +19,8 @@ const Login = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      const BASE = import.meta.env.VITE_API_URL || '';
+      const res = await axios.post(`${BASE}/api/auth/login`, formData);
       login(res.data.token, res.data.user);
       navigate('/dashboard');
     } catch (err) {
