@@ -116,7 +116,7 @@ const Invoices = () => {
 
         <div className="mb-6">
           <div className="flex space-x-2">
-            {['all', 'draft', 'sent', 'paid', 'overdue', 'declined', 'cancelled', 'expired'].map((status) => (
+            {['all', 'draft', 'sent', 'paid', 'overdue'].map((status) => (
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}

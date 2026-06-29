@@ -158,6 +158,12 @@ export const getInvoiceForPayment = async (req, res) => {
       });
     }
 
+    if (invoice.status === 'draft') {
+      return res.status(403).json({
+        message: 'This invoice has not been sent yet'
+      });
+    }
+
     const payload = await buildPublicInvoicePayload(invoice);
     res.json(payload);
   } catch (error) {

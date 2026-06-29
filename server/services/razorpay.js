@@ -157,8 +157,11 @@ export const ensureInvoiceRazorpay = async (invoice, client) => {
   }
 
   invoice.razorpayOrderId = '';
-  let pl = invoice.stripePaymentLink;
-  if (needsPaymentLinkRegeneration(pl)) {
+  const staleStatuses = ['cancelled', 'expired', 'declined'];
+  const linkIsStale =
+    needsPaymentLinkRegeneration(invoice.stripePaymentLink) ||
+    staleStatuses.includes(invoice.status);
+  if (linkIsStale) {
     const link = await createPaymentLink(
       total,
       invoice._id.toString(),

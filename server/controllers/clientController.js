@@ -1,4 +1,5 @@
 import Client from '../models/Client.js';
+import Invoice from '../models/Invoice.js';
 
 // Create a new client
 export const createClient = async (req, res) => {
@@ -159,17 +160,26 @@ export const deleteClient = async (req, res) => {
     const { id } = req.params;
     const freelancerId = req.userId; // From JWT middleware
 
-    // Find and delete client (only if owned by freelancer)
-    const client = await Client.findOneAndDelete({ 
-      _id: id, 
-      freelancerId 
-    });
+    const client = await Client.findOne({ _id: id, freelancerId });
 
     if (!client) {
-      return res.status(404).json({ 
-        message: 'Client not found or you do not have permission to delete it' 
+      return res.status(404).json({
+        message: 'Client not found or you do not have permission to delete it'
       });
     }
+
+    const activeInvoiceCount = await Invoice.countDocuments({
+      clientId: id,
+      status: { $in: ['draft', 'sent', 'overdue'] }
+    });
+
+    if (activeInvoiceCount > 0) {
+      return res.status(400).json({
+        message: `Cannot delete client with ${activeInvoiceCount} active invoice${activeInvoiceCount > 1 ? 's' : ''}. Cancel or resolve them first.`
+      });
+    }
+
+    await client.deleteOne();
 
     res.json({
       message: 'Client deleted successfully',

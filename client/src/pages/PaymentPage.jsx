@@ -117,7 +117,14 @@ const PaymentPage = () => {
         name: invoice.clientId?.name || '',
         email: invoice.clientId?.email || ''
       },
-      handler: () => {
+      handler: async (response) => {
+        if (response?.razorpay_payment_id) {
+          try {
+            await confirmPaymentAfterRedirect(invoiceId, response.razorpay_payment_id);
+          } catch (err) {
+            console.error('Confirm payment after checkout:', err);
+          }
+        }
         loadInvoice();
       },
       theme: { color: '#2563eb' }

@@ -32,8 +32,8 @@ const lineItemValidation = [
     .withMessage('Unit price must be a positive number')
 ];
 
-// Validation rules for creating/updating invoices
-const invoiceValidation = [
+// Validation rules for creating invoices (clientId required)
+const createInvoiceValidation = [
   body('clientId')
     .notEmpty()
     .withMessage('Client ID is required')
@@ -60,9 +60,55 @@ const invoiceValidation = [
     )
 ];
 
+// Validation rules for updating invoices (clientId and dueDate optional)
+const updateInvoiceValidation = [
+  body('clientId')
+    .optional()
+    .isMongoId()
+    .withMessage('Invalid client ID format'),
+  body('dueDate')
+    .optional()
+    .isISO8601()
+    .withMessage('Due date must be a valid date'),
+  body('tax')
+    .optional()
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Tax must be between 0 and 100'),
+  body('discount')
+    .optional()
+    .isFloat({ min: 0, max: 100 })
+    .withMessage('Discount must be between 0 and 100'),
+  body('status')
+    .optional()
+    .isIn(['draft', 'sent', 'paid', 'overdue', 'cancelled', 'declined', 'expired'])
+    .withMessage(
+      'Status must be one of: draft, sent, paid, overdue, cancelled, declined, expired'
+    )
+];
+
+const updateLineItemValidation = [
+  body('lineItems')
+    .optional()
+    .isArray({ min: 1 })
+    .withMessage('At least one line item is required'),
+  body('lineItems.*.description')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Line item description is required'),
+  body('lineItems.*.quantity')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Quantity must be a positive number'),
+  body('lineItems.*.unitPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit price must be a positive number')
+];
+
 // Routes
 // POST /api/invoices - Create a new invoice
-router.post('/', [...invoiceValidation, ...lineItemValidation], handleValidationErrors, createInvoice);
+router.post('/', [...createInvoiceValidation, ...lineItemValidation], handleValidationErrors, createInvoice);
 
 // GET /api/invoices - Get all invoices with optional filters (status, startDate, endDate)
 router.get('/', getInvoices);
@@ -71,7 +117,7 @@ router.get('/', getInvoices);
 router.get('/:id', getInvoice);
 
 // PUT /api/invoices/:id - Update an invoice
-router.put('/:id', [...invoiceValidation, ...lineItemValidation], handleValidationErrors, updateInvoice);
+router.put('/:id', [...updateInvoiceValidation, ...updateLineItemValidation], handleValidationErrors, updateInvoice);
 
 // POST /api/invoices/:id/send - Send invoice (mark as sent, create payment link, send email)
 router.post('/:id/send', sendInvoice);

@@ -35,7 +35,9 @@ export const handleRazorpayWebhook = async (req, res) => {
   }
 
   try {
-    const payload = typeof body === 'string' ? JSON.parse(body) : body;
+    const payload = Buffer.isBuffer(body)
+      ? JSON.parse(body.toString('utf8'))
+      : typeof body === 'string' ? JSON.parse(body) : body;
     const event = payload.event;
 
     switch (event) {

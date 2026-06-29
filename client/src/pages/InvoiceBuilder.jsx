@@ -14,6 +14,7 @@ const formatInvoiceApiError = (err) => {
 import { useNavigate, useParams } from 'react-router-dom';
 import { getClients } from '../services/clientService';
 import { createInvoice, updateInvoice, sendInvoice, getInvoice } from '../services/invoiceService';
+import { formatInr } from '../utils/currency';
 
 const InvoiceBuilder = () => {
   const navigate = useNavigate();
@@ -185,16 +186,11 @@ const InvoiceBuilder = () => {
       setIsSubmitting(true);
       setError(null);
 
-      const invoiceData = {
-        ...formData,
-        status: 'sent'
-      };
-
       if (invoiceId) {
-        await updateInvoice(invoiceId, invoiceData);
+        await updateInvoice(invoiceId, formData);
         await sendInvoice(invoiceId);
       } else {
-        const response = await createInvoice(invoiceData);
+        const response = await createInvoice(formData);
         await sendInvoice(response.invoice._id);
       }
 
@@ -363,23 +359,23 @@ const InvoiceBuilder = () => {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">${calculations.subtotal.toFixed(2)}</span>
+                <span className="font-medium">{formatInr(calculations.subtotal)}</span>
               </div>
               {formData.tax > 0 && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax ({formData.tax}%):</span>
-                  <span className="font-medium">${calculations.taxAmount.toFixed(2)}</span>
+                  <span className="font-medium">{formatInr(calculations.taxAmount)}</span>
                 </div>
               )}
               {formData.discount > 0 && (
                 <div className="flex justify-between text-red-600">
                   <span>Discount ({formData.discount}%):</span>
-                  <span className="font-medium">-${calculations.discountAmount.toFixed(2)}</span>
+                  <span className="font-medium">-{formatInr(calculations.discountAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between pt-2 border-t border-gray-300">
                 <span className="text-lg font-bold">Total:</span>
-                <span className="text-lg font-bold text-blue-600">${calculations.total.toFixed(2)}</span>
+                <span className="text-lg font-bold text-blue-600">{formatInr(calculations.total)}</span>
               </div>
             </div>
           </div>

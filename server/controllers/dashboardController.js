@@ -64,20 +64,20 @@ export const getMonthlyRevenue = async (req, res) => {
     if (year) {
       const startDate = new Date(`${year}-01-01`);
       const endDate = new Date(`${year}-12-31T23:59:59`);
-      query.createdAt = {
+      query.paidAt = {
         $gte: startDate,
         $lte: endDate
       };
     }
 
     // Get all paid invoices
-    const invoices = await Invoice.find(query).select('total createdAt');
+    const invoices = await Invoice.find(query).select('total paidAt createdAt');
 
     // Aggregate by month
     const monthlyData = {};
-    
+
     invoices.forEach(invoice => {
-      const date = new Date(invoice.createdAt);
+      const date = new Date(invoice.paidAt || invoice.createdAt);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       const monthName = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       
@@ -148,11 +148,11 @@ export const getYearlyRevenue = async (req, res) => {
     const invoices = await Invoice.find({
       freelancerId,
       status: 'paid'
-    }).select('total createdAt');
+    }).select('total paidAt createdAt');
 
     const yearlyData = {};
     invoices.forEach(invoice => {
-      const year = new Date(invoice.createdAt).getFullYear();
+      const year = new Date(invoice.paidAt || invoice.createdAt).getFullYear();
       if (!yearlyData[year]) {
         yearlyData[year] = { revenue: 0, count: 0 };
       }
@@ -190,7 +190,7 @@ export const getYearlyRevenue = async (req, res) => {
 export const getRecentInvoices = async (req, res) => {
   try {
     const freelancerId = req.userId;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = Math.min(parseInt(req.query.limit) || 5, 50);
 
     const invoices = await Invoice.find({ freelancerId })
       .populate('clientId', 'name email company')
