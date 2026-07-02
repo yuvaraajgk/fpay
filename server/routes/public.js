@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import {
   getInvoiceForPayment,
   confirmPaymentFromRedirect
@@ -6,10 +7,15 @@ import {
 
 const router = express.Router();
 
-// POST /api/public/invoice/:invoiceId/confirm-payment — verify Razorpay payment after redirect (esp. when webhooks cannot reach localhost)
-router.post('/invoice/:invoiceId/confirm-payment', confirmPaymentFromRedirect);
+const publicLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  message: { message: 'Too many requests, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
-// GET /api/public/invoice/:invoiceId - Get invoice details for payment page
-router.get('/invoice/:invoiceId', getInvoiceForPayment);
+router.get('/invoice/:invoiceId', publicLimiter, getInvoiceForPayment);
+router.post('/invoice/:invoiceId/confirm-payment', publicLimiter, confirmPaymentFromRedirect);
 
 export default router;
