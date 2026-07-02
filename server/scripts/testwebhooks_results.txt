@@ -1,0 +1,38 @@
+Connected to MongoDB
+
+
+▶ payment_link.paid
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "paid"
+  ✅ invoice.razorpayPaymentId: "pay_test_001"
+  ✅ invoice.paidAt set
+
+▶ payment_link.cancelled
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "cancelled"
+
+▶ payment_link.expired
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "expired"
+
+▶ payment.captured.order
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "paid"
+  ✅ invoice.razorpayPaymentId: "pay_test_002"
+
+▶ payment.captured.plink
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "paid"
+
+▶ payment.failed
+  ✅ HTTP status: "200"
+  ✅ invoice.status: "declined"
+
+▶ invalid.signature
+  ✅ HTTP status (should reject): "400"
+
+▶ missing.signature
+  ✅ HTTP status (should reject): "400"
+
+────────────────────────────────────────
+Results: 8 passed, 0 failed
