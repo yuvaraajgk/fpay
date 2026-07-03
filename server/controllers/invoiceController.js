@@ -329,7 +329,7 @@ export const sendInvoice = async (req, res) => {
       invoice.pdfS3Key = key;
     }
 
-    const { paymentUrlForEmail } = await ensureInvoiceRazorpay(invoice, invoice.clientId);
+    await ensureInvoiceRazorpay(invoice, invoice.clientId);
 
     invoice.status = 'sent';
     await invoice.save();
@@ -341,7 +341,7 @@ export const sendInvoice = async (req, res) => {
       clientName: invoice.clientId.name,
       invoiceNumber: invoice.invoiceNumber,
       total: invoice.total,
-      paymentUrl: paymentUrlForEmail,
+      dueDate: invoice.dueDate,
       publicInvoiceUrl,
       businessName
     });
@@ -435,7 +435,7 @@ export const sendOverdueReminder = async (req, res) => {
     }
 
     const freelancer = await User.findById(freelancerId);
-    const { paymentUrlForEmail } = await ensureInvoiceRazorpay(invoice, invoice.clientId);
+    await ensureInvoiceRazorpay(invoice, invoice.clientId);
     await invoice.save();
 
     const publicInvoiceUrl = `${process.env.CLIENT_URL}/invoice/${invoice._id}/pay`;
@@ -445,7 +445,7 @@ export const sendOverdueReminder = async (req, res) => {
       clientName: invoice.clientId.name,
       invoiceNumber: invoice.invoiceNumber,
       total: invoice.total,
-      paymentUrl: paymentUrlForEmail,
+      dueDate: invoice.dueDate,
       publicInvoiceUrl,
       businessName
     });

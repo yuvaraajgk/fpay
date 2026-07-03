@@ -259,6 +259,12 @@ const InvoiceBuilder = () => {
             </div>
 
             <div className="space-y-4">
+              <div className="hidden sm:grid grid-cols-12 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wide">
+                <div className="col-span-5">Description</div>
+                <div className="col-span-2">Qty</div>
+                <div className="col-span-3">Unit Price</div>
+                <div className="col-span-2"></div>
+              </div>
               {formData.lineItems.map((item, index) => (
                 <div key={index} className="grid grid-cols-12 gap-4 items-end">
                   <div className="col-span-5">
@@ -289,7 +295,7 @@ const InvoiceBuilder = () => {
                       onChange={(e) => handleLineItemChange(index, 'unitPrice', e.target.value)}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="no-spinner w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   <div className="col-span-2 flex justify-end">
