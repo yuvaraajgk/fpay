@@ -204,35 +204,35 @@ const InvoiceBuilder = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="font-display text-2xl font-bold text-ink-900">
             {invoiceId ? 'Edit Invoice' : 'Create New Invoice'}
           </h1>
-          <p className="mt-2 text-gray-600">Build and send invoices to your clients</p>
+          <p className="mt-1 text-ink-500 text-sm">Build and send invoices to your clients</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+            <p className="text-rose-800 text-sm">{error}</p>
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6 space-y-6">
           <div>
-            <label htmlFor="clientId" className="block text-sm font-medium text-gray-700 mb-2">
-              Client <span className="text-red-500">*</span>
+            <label htmlFor="clientId" className="block text-sm font-medium text-ink-700 mb-1.5">
+              Client <span className="text-rose-500">*</span>
             </label>
             {isLoadingClients ? (
-              <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
+              <div className="animate-pulse bg-slate-100 h-10 rounded-lg"></div>
             ) : (
               <select
                 id="clientId"
                 name="clientId"
                 value={formData.clientId}
                 onChange={handleClientChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-brand-400 focus:border-transparent text-sm"
               >
                 <option value="">Select a client</option>
                 {clients.map((client) => (
@@ -245,21 +245,21 @@ const InvoiceBuilder = () => {
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Line Items <span className="text-red-500">*</span>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-medium text-ink-700">
+                Line Items <span className="text-rose-500">*</span>
               </label>
               <button
                 type="button"
                 onClick={addLineItem}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-3 py-1.5 text-xs font-medium bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white rounded-lg transition-colors"
               >
                 + Add Item
               </button>
             </div>
 
             <div className="space-y-4">
-              <div className="hidden sm:grid grid-cols-12 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <div className="hidden sm:grid grid-cols-12 gap-4 text-xs font-medium text-ink-500 uppercase tracking-wide">
                 <div className="col-span-5">Description</div>
                 <div className="col-span-2">Qty</div>
                 <div className="col-span-3">Unit Price</div>
@@ -273,7 +273,7 @@ const InvoiceBuilder = () => {
                       placeholder="Description"
                       value={item.description}
                       onChange={(e) => handleLineItemChange(index, 'description', e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
                     />
                   </div>
                   <div className="col-span-2">
@@ -284,7 +284,7 @@ const InvoiceBuilder = () => {
                       onChange={(e) => handleLineItemChange(index, 'quantity', e.target.value)}
                       min="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
                     />
                   </div>
                   <div className="col-span-3">
@@ -295,7 +295,7 @@ const InvoiceBuilder = () => {
                       onChange={(e) => handleLineItemChange(index, 'unitPrice', e.target.value)}
                       min="0"
                       step="0.01"
-                      className="no-spinner w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="no-spinner w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
                     />
                   </div>
                   <div className="col-span-2 flex justify-end">
@@ -303,7 +303,7 @@ const InvoiceBuilder = () => {
                       type="button"
                       onClick={() => removeLineItem(index)}
                       disabled={formData.lineItems.length === 1}
-                      className="px-3 py-2 text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                      className="px-3 py-2 text-rose-600 hover:text-rose-700 text-sm disabled:text-ink-400 disabled:cursor-not-allowed"
                     >
                       Remove
                     </button>
@@ -315,7 +315,7 @@ const InvoiceBuilder = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="tax" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="tax" className="block text-sm font-medium text-ink-700 mb-1.5">
                 Tax (%)
               </label>
               <input
@@ -327,11 +327,11 @@ const InvoiceBuilder = () => {
                 min="0"
                 max="100"
                 step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
               />
             </div>
             <div>
-              <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="discount" className="block text-sm font-medium text-ink-700 mb-1.5">
                 Discount (%)
               </label>
               <input
@@ -343,12 +343,12 @@ const InvoiceBuilder = () => {
                 min="0"
                 max="100"
                 step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
               />
             </div>
             <div>
-              <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-2">
-                Due Date <span className="text-red-500">*</span>
+              <label htmlFor="dueDate" className="block text-sm font-medium text-ink-700 mb-1.5">
+                Due Date <span className="text-rose-500">*</span>
               </label>
               <input
                 type="date"
@@ -356,41 +356,41 @@ const InvoiceBuilder = () => {
                 name="dueDate"
                 value={formData.dueDate}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-400 text-sm"
               />
             </div>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl">
             <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">{formatInr(calculations.subtotal)}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-ink-600">Subtotal:</span>
+                <span className="font-medium text-ink-900">{formatInr(calculations.subtotal)}</span>
               </div>
               {formData.tax > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tax ({formData.tax}%):</span>
-                  <span className="font-medium">{formatInr(calculations.taxAmount)}</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-ink-600">Tax ({formData.tax}%):</span>
+                  <span className="font-medium text-ink-900">{formatInr(calculations.taxAmount)}</span>
                 </div>
               )}
               {formData.discount > 0 && (
-                <div className="flex justify-between text-red-600">
+                <div className="flex justify-between text-sm text-rose-600">
                   <span>Discount ({formData.discount}%):</span>
                   <span className="font-medium">-{formatInr(calculations.discountAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between pt-2 border-t border-gray-300">
-                <span className="text-lg font-bold">Total:</span>
-                <span className="text-lg font-bold text-blue-600">{formatInr(calculations.total)}</span>
+              <div className="flex justify-between pt-2 border-t border-slate-200">
+                <span className="text-base font-semibold text-ink-900">Total:</span>
+                <span className="font-display text-lg font-bold text-brand-600">{formatInr(calculations.total)}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4 pt-4">
+          <div className="flex justify-end space-x-3 pt-2">
             <button
               type="button"
               onClick={() => navigate('/invoices')}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              className="px-5 py-2.5 border border-slate-200 rounded-lg text-ink-700 text-sm font-medium hover:bg-slate-50"
               disabled={isSubmitting}
             >
               Cancel
@@ -398,7 +398,7 @@ const InvoiceBuilder = () => {
             <button
               type="button"
               onClick={handleSaveDraft}
-              className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+              className="px-5 py-2.5 bg-slate-200 text-ink-700 text-sm font-medium rounded-lg hover:bg-slate-300 disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Saving...' : 'Save as Draft'}
@@ -406,7 +406,7 @@ const InvoiceBuilder = () => {
             <button
               type="button"
               onClick={handleSend}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-5 py-2.5 bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white text-sm font-medium rounded-lg shadow-soft disabled:opacity-50 transition-colors"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Sending...' : 'Send Invoice'}

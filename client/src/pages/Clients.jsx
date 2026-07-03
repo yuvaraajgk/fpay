@@ -114,11 +114,11 @@ const Clients = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
+          className="inline-flex items-center text-ink-500 hover:text-ink-900 mb-6 text-sm"
         >
           <span className="mr-2">←</span> Back to Dashboard
         </Link>
@@ -126,13 +126,13 @@ const Clients = () => {
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Clients</h1>
-              <p className="mt-2 text-gray-600">Manage your client information</p>
+              <h1 className="font-display text-2xl font-bold text-ink-900">Clients</h1>
+              <p className="mt-1 text-ink-500 text-sm">Manage your client information</p>
             </div>
             {!showForm && (
               <button
                 onClick={handleCreate}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                className="px-5 py-2.5 bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white text-sm font-medium rounded-lg shadow-soft transition-colors"
               >
                 + Add New Client
               </button>
@@ -141,8 +141,8 @@ const Clients = () => {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+            <p className="text-rose-800 text-sm">{error}</p>
           </div>
         )}
 
@@ -159,7 +159,7 @@ const Clients = () => {
         )}
 
         {!showForm && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6">
             <ClientList
               clients={clients}
               onView={handleView}

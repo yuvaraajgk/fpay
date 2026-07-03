@@ -3,6 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getInvoice, sendInvoice as sendInvoiceRequest } from '../services/invoiceService';
 import { formatInr } from '../utils/currency';
 
+const STATUS_STYLES = {
+  paid: 'bg-emerald-50 text-emerald-700',
+  overdue: 'bg-rose-50 text-rose-700',
+  sent: 'bg-sky-50 text-sky-700',
+  declined: 'bg-orange-100 text-orange-900',
+  cancelled: 'bg-slate-200 text-slate-800',
+  expired: 'bg-amber-100 text-amber-900'
+};
+
 const InvoiceDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -73,24 +82,7 @@ const InvoiceDetail = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'paid':
-        return 'bg-green-100 text-green-800';
-      case 'overdue':
-        return 'bg-red-100 text-red-800';
-      case 'sent':
-        return 'bg-blue-100 text-blue-800';
-      case 'declined':
-        return 'bg-orange-100 text-orange-900';
-      case 'cancelled':
-        return 'bg-gray-200 text-gray-800';
-      case 'expired':
-        return 'bg-amber-100 text-amber-900';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const getStatusStyle = (status) => STATUS_STYLES[status] || 'bg-slate-100 text-slate-600';
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -111,10 +103,10 @@ const InvoiceDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading invoice...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600 mx-auto"></div>
+          <p className="mt-4 text-ink-500">Loading invoice...</p>
         </div>
       </div>
     );
@@ -122,13 +114,13 @@ const InvoiceDetail = () => {
 
   if (error || !invoice) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 text-xl mb-4">Error</div>
-          <p className="text-gray-600">{error || 'Invoice not found'}</p>
+          <div className="text-rose-600 text-xl mb-4">Error</div>
+          <p className="text-ink-500">{error || 'Invoice not found'}</p>
           <button
             onClick={() => navigate('/invoices')}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="mt-4 px-4 py-2 bg-gradient-to-b from-ink-700 to-ink-900 text-white rounded-lg hover:from-ink-800 hover:to-ink-900"
           >
             Back to Invoices
           </button>
@@ -138,22 +130,22 @@ const InvoiceDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <button
             onClick={() => navigate('/invoices')}
-            className="text-blue-600 hover:text-blue-800 mb-4"
+            className="text-brand-600 hover:text-brand-700 mb-4 text-sm"
           >
             ← Back to Invoices
           </button>
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Invoice Details</h1>
-              <p className="mt-2 text-gray-600">Invoice {invoice.invoiceNumber}</p>
+              <h1 className="font-display text-2xl font-bold text-ink-900">Invoice Details</h1>
+              <p className="mt-1 text-ink-500 text-sm">Invoice {invoice.invoiceNumber}</p>
             </div>
             <span
-              className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
+              className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
                 invoice.status
               )}`}
             >
@@ -164,44 +156,44 @@ const InvoiceDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6">
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Invoice Number</h3>
-                  <p className="text-lg font-semibold">{invoice.invoiceNumber}</p>
+                  <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wide mb-1.5">Invoice Number</h3>
+                  <p className="text-base font-semibold text-ink-900">{invoice.invoiceNumber}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Due Date</h3>
-                  <p className="text-lg">{formatDate(invoice.dueDate)}</p>
+                  <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wide mb-1.5">Due Date</h3>
+                  <p className="text-base text-ink-900">{formatDate(invoice.dueDate)}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Date Created</h3>
-                  <p className="text-lg">{formatDate(invoice.createdAt)}</p>
+                  <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wide mb-1.5">Date Created</h3>
+                  <p className="text-base text-ink-900">{formatDate(invoice.createdAt)}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Status</h3>
+                  <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wide mb-1.5">Status</h3>
                   <span
-                    className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
+                    className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusStyle(
                       invoice.status
                     )}`}
                   >
                     {invoice.status.toUpperCase()}
                   </span>
                   {invoice.status === 'paid' && invoice.paidAt && (
-                    <p className="text-sm text-gray-700 mt-2">
-                      <span className="font-medium text-gray-600">Paid on </span>
+                    <p className="text-sm text-ink-700 mt-2">
+                      <span className="font-medium text-ink-500">Paid on </span>
                       {formatDateTime(invoice.paidAt)}
                     </p>
                   )}
                   {invoice.status === 'paid' && !invoice.paidAt && (
-                    <p className="text-xs text-gray-500 mt-2">Payment date not on record</p>
+                    <p className="text-xs text-ink-500 mt-2">Payment date not on record</p>
                   )}
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Bill To</h3>
-                <div className="text-gray-900">
+              <div className="border-t border-slate-100 pt-6">
+                <h3 className="text-xs font-medium text-ink-500 uppercase tracking-wide mb-2">Bill To</h3>
+                <div className="text-ink-900 text-sm">
                   <p className="font-semibold">{invoice.clientId?.name}</p>
                   {invoice.clientId?.company && <p>{invoice.clientId.company}</p>}
                   {invoice.clientId?.email && <p>{invoice.clientId.email}</p>}
@@ -211,39 +203,39 @@ const InvoiceDetail = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold mb-4">Line Items</h3>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6">
+              <h3 className="font-display font-semibold text-ink-900 mb-4">Line Items</h3>
               <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100">
+                      <th className="pb-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wide">
                         Description
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                      <th className="pb-3 text-right text-xs font-medium text-ink-500 uppercase tracking-wide">
                         Quantity
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                      <th className="pb-3 text-right text-xs font-medium text-ink-500 uppercase tracking-wide">
                         Unit Price
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                      <th className="pb-3 text-right text-xs font-medium text-ink-500 uppercase tracking-wide">
                         Amount
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-slate-100">
                     {invoice.lineItems.map((item, index) => {
                       const amount = item.quantity * item.unitPrice;
                       return (
                         <tr key={index}>
-                          <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
-                          <td className="px-6 py-4 text-sm text-gray-500 text-right">
+                          <td className="py-3 text-ink-900">{item.description}</td>
+                          <td className="py-3 text-ink-500 text-right">
                             {item.quantity}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-500 text-right">
+                          <td className="py-3 text-ink-500 text-right">
                             {formatInr(item.unitPrice)}
                           </td>
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900 text-right">
+                          <td className="py-3 font-medium text-ink-900 text-right">
                             {formatInr(amount)}
                           </td>
                         </tr>
@@ -254,23 +246,23 @@ const InvoiceDetail = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6">
               <div className="flex justify-end">
-                <div className="w-64 space-y-2">
+                <div className="w-64 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium">{formatInr(invoice.subtotal)}</span>
+                    <span className="text-ink-600">Subtotal:</span>
+                    <span className="font-medium text-ink-900">{formatInr(invoice.subtotal)}</span>
                   </div>
                   {invoice.tax > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Tax ({invoice.tax}%):</span>
-                      <span className="font-medium">
+                      <span className="text-ink-600">Tax ({invoice.tax}%):</span>
+                      <span className="font-medium text-ink-900">
                         {formatInr((invoice.subtotal * invoice.tax) / 100)}
                       </span>
                     </div>
                   )}
                   {invoice.discount > 0 && (
-                    <div className="flex justify-between text-red-600">
+                    <div className="flex justify-between text-rose-600">
                       <span>Discount ({invoice.discount}%):</span>
                       <span className="font-medium">
                         -
@@ -280,9 +272,9 @@ const InvoiceDetail = () => {
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between pt-2 border-t border-gray-300">
-                    <span className="text-lg font-bold">Total:</span>
-                    <span className="text-lg font-bold text-blue-600">
+                  <div className="flex justify-between pt-2 border-t border-slate-200">
+                    <span className="text-base font-semibold text-ink-900">Total:</span>
+                    <span className="font-display text-lg font-bold text-brand-600">
                       {formatInr(invoice.total)}
                     </span>
                   </div>
@@ -292,21 +284,21 @@ const InvoiceDetail = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold mb-4">Bill payment</h3>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-6">
+              <h3 className="font-display font-semibold text-ink-900 mb-4">Bill payment</h3>
               <div
-                className={`rounded-xl border-2 p-4 mb-4 ${
+                className={`rounded-xl border p-4 mb-4 ${
                   isPaid
-                    ? 'border-green-200 bg-green-50'
+                    ? 'border-emerald-200 bg-emerald-50'
                     : 'border-amber-200 bg-amber-50'
                 }`}
               >
-                <p className="text-xs font-medium uppercase tracking-wide text-gray-600 mb-1">
+                <p className="text-xs font-medium uppercase tracking-wide text-ink-500 mb-1">
                   Payment status
                 </p>
                 <p
-                  className={`text-2xl font-bold ${
-                    isPaid ? 'text-green-800' : 'text-amber-900'
+                  className={`font-display text-2xl font-bold ${
+                    isPaid ? 'text-emerald-700' : 'text-amber-900'
                   }`}
                 >
                   {isPaid ? 'Paid' : 'Pending'}
@@ -317,19 +309,19 @@ const InvoiceDetail = () => {
                   </p>
                 )}
                 {isPaid && (
-                  <p className="text-sm text-green-800 mt-2">
+                  <p className="text-sm text-emerald-800 mt-2">
                     Recorded from Razorpay when payment completed.
                   </p>
                 )}
                 {isPaid && invoice.paidAt && (
-                  <p className="text-sm text-green-900 mt-3">
+                  <p className="text-sm text-emerald-900 mt-3">
                     <span className="font-medium">Paid on: </span>
                     {formatDateTime(invoice.paidAt)}
                   </p>
                 )}
                 {isPaid && invoice.razorpayPaymentId && (
-                  <p className="text-xs text-gray-600 mt-2 break-all">
-                    <span className="font-medium text-gray-700">Payment ID: </span>
+                  <p className="text-xs text-ink-500 mt-2 break-all">
+                    <span className="font-medium text-ink-700">Payment ID: </span>
                     <span className="font-mono">{invoice.razorpayPaymentId}</span>
                   </p>
                 )}
@@ -339,7 +331,7 @@ const InvoiceDetail = () => {
                 {invoice.status === 'draft' && (
                   <button
                     onClick={() => navigate(`/invoices/${id}/edit`)}
-                    className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                    className="w-full px-4 py-2.5 bg-slate-200 text-ink-700 text-sm font-medium rounded-lg hover:bg-slate-300 disabled:opacity-50"
                     disabled={isActionLoading}
                   >
                     Edit invoice
@@ -348,7 +340,7 @@ const InvoiceDetail = () => {
                 {!isPaid && (
                   <button
                     onClick={handleSendPaymentLink}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+                    className="w-full px-4 py-2.5 bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white text-sm font-medium rounded-lg shadow-soft disabled:opacity-50"
                     disabled={isActionLoading}
                   >
                     {isActionLoading ? 'Sending…' : 'Send payment link to user'}
@@ -359,7 +351,7 @@ const InvoiceDetail = () => {
                     href={invoice.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 text-center text-sm"
+                    className="block w-full px-4 py-2.5 bg-white border border-slate-200 text-ink-700 rounded-lg hover:bg-slate-50 text-center text-sm font-medium"
                   >
                     Download PDF
                   </a>

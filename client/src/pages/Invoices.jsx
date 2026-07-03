@@ -3,6 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { getInvoices, sendInvoice as sendInvoiceRequest } from '../services/invoiceService';
 import { formatInr } from '../utils/currency';
 
+const STATUS_STYLES = {
+  paid: 'bg-emerald-50 text-emerald-700',
+  overdue: 'bg-rose-50 text-rose-700',
+  sent: 'bg-sky-50 text-sky-700',
+  declined: 'bg-orange-100 text-orange-900',
+  cancelled: 'bg-slate-200 text-slate-800',
+  expired: 'bg-amber-100 text-amber-900'
+};
+
 const Invoices = () => {
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState([]);
@@ -62,24 +71,7 @@ const Invoices = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'paid':
-        return 'bg-green-100 text-green-800';
-      case 'overdue':
-        return 'bg-red-100 text-red-800';
-      case 'sent':
-        return 'bg-blue-100 text-blue-800';
-      case 'declined':
-        return 'bg-orange-100 text-orange-900';
-      case 'cancelled':
-        return 'bg-gray-200 text-gray-800';
-      case 'expired':
-        return 'bg-amber-100 text-amber-900';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
+  const getStatusStyle = (status) => STATUS_STYLES[status] || 'bg-slate-100 text-slate-600';
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -90,24 +82,24 @@ const Invoices = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
+          className="inline-flex items-center text-ink-500 hover:text-ink-900 mb-6 text-sm"
         >
           <span className="mr-2">←</span> Back to Dashboard
         </Link>
 
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
-              <p className="mt-2 text-gray-600">Manage and track your invoices</p>
+              <h1 className="font-display text-2xl font-bold text-ink-900">Invoices</h1>
+              <p className="mt-1 text-ink-500 text-sm">Manage and track your invoices</p>
             </div>
             <button
               onClick={() => navigate('/invoices/new')}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="px-5 py-2.5 bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white text-sm font-medium rounded-lg shadow-soft transition-colors"
             >
               + Create Invoice
             </button>
@@ -115,15 +107,15 @@ const Invoices = () => {
         </div>
 
         <div className="mb-6">
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             {['all', 'draft', 'sent', 'paid', 'overdue'].map((status) => (
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   statusFilter === status
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                    ? 'bg-ink-900 text-white'
+                    : 'bg-white text-ink-600 hover:bg-slate-50 border border-slate-200'
                 }`}
               >
                 {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
@@ -133,93 +125,93 @@ const Invoices = () => {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+            <p className="text-rose-800 text-sm">{error}</p>
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-card overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
             </div>
           ) : invoices.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-ink-500">
               <p className="text-lg">No invoices found.</p>
               <p className="text-sm mt-2">Create your first invoice to get started.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full text-sm">
+                <thead className="bg-slate-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Invoice #
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Client
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Amount
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Due Date
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-ink-500 uppercase tracking-wide">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-slate-100">
                   {invoices.map((invoice) => (
-                    <tr key={invoice._id} className="hover:bg-gray-50">
+                    <tr key={invoice._id} className="hover:bg-slate-50/70">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-ink-900">
                           {invoice.invoiceNumber}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-ink-900">
                           {invoice.clientId?.name || 'N/A'}
                         </div>
                         {invoice.clientId?.company && (
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-ink-500">
                             {invoice.clientId.company}
                           </div>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-ink-900">
                           {formatInr(invoice.total)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                          className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${getStatusStyle(
                             invoice.status
                           )}`}
                         >
                           {invoice.status.toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-ink-500">
                         {formatDate(invoice.dueDate)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end space-x-2">
+                        <div className="flex justify-end space-x-3">
                           <button
                             onClick={() => handleView(invoice._id)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-brand-600 hover:text-brand-700"
                           >
                             View
                           </button>
                           {invoice.status === 'draft' && (
                             <button
                               onClick={() => handleEdit(invoice._id)}
-                              className="text-gray-600 hover:text-gray-900"
+                              className="text-ink-500 hover:text-ink-900"
                             >
                               Edit
                             </button>
@@ -227,7 +219,7 @@ const Invoices = () => {
                           {invoice.status !== 'paid' && (
                             <button
                               onClick={() => handleSendPaymentLink(invoice._id)}
-                              className="text-green-600 hover:text-green-900"
+                              className="text-emerald-600 hover:text-emerald-700"
                             >
                               Send link
                             </button>

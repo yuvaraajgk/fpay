@@ -41,35 +41,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-gray-600">Overview of your freelance business</p>
+          <h1 className="font-display text-2xl font-bold text-ink-900">Dashboard</h1>
+          <p className="mt-1 text-ink-500 text-sm">Overview of your freelance business</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+            <p className="text-rose-800 text-sm">{error}</p>
           </div>
         )}
 
-        <div className="mb-6 flex space-x-4">
+        <div className="mb-8 flex flex-wrap gap-3">
           <button
             onClick={() => navigate('/invoices/new')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2.5 bg-gradient-to-b from-ink-700 to-ink-900 hover:from-ink-800 hover:to-ink-900 text-white text-sm font-medium rounded-lg shadow-soft transition-colors"
           >
             + Create Invoice
           </button>
           <button
             onClick={() => navigate('/clients')}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            className="px-4 py-2.5 bg-white border border-slate-200 text-ink-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
           >
             Manage Clients
           </button>
           <button
             onClick={() => navigate('/invoices')}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            className="px-4 py-2.5 bg-white border border-slate-200 text-ink-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
           >
             View All Invoices
           </button>
